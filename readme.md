@@ -15,14 +15,15 @@ python manage.py startapp polls
 ```
 #### Write your first view
 Open the file **polls/views.py** and put the following code  
-```
+```python
 from django.http import HttpResponse
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 ```
 To call the view, we need to mapt it to a URL. Create a file called **urls.py**, and include the following code:
-```
+```python
+#polls/urls.py
 from django.conf.urls import url
 from . import views
 
