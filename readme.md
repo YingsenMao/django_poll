@@ -5,5 +5,8 @@ Activate the virtual environment by using `poll_project\Scripts\activate`, and d
 
 ### Part 1
 Check the django version by `python -m django --version`.  
-Create a project called mysite by `django-admin startproject mysite`.  
+####Create a project 
+```
+django-admin startproject mysite
+```  
 Create a app called polls by `python manage.py startapp polls`. 
