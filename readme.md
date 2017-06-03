@@ -43,3 +43,22 @@ urlpatterns = [
 ]
 ```
 Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
+
+## Part 2
+#### Database Setup
+The **DATABASES** in the **mysite/setting.py** defines the database.  
+* ENGINE: database type.Eg. 'django.db.backends.postgresql'.
+* NAME: The name of your database. If you're using SQLite, it will be the full absolute path, including the filename.
+If you are not using SQLite as your database, the following additional settings must be added.
+* USER
+* PASSWORD
+* HOST 
+For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES]  
+#### Installed Applications
+The **INSTALLED_APPS** in the **mysite/setting.py** holds the names of all the Django applications that are activated in this Django instance.  
+Some of these applications make use of at least one database table.
+#### Creating Models
+A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
+* Each model is a Python class that subclasses **django.db.models.Model**.
+* Each attribute of the model represnets a database field.
+* With all of this, Django gives you an automatically-generated database-access API.
