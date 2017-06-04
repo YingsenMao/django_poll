@@ -54,8 +54,9 @@ If you are not using SQLite as your database, the following additional settings 
 * **PASSWORD**
 * **HOST** 
 For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
-#### Installed Applications
-The **INSTALLED_APPS** in the **mysite/setting.py** holds the names of all the Django applications that are activated in this Django instance.  
+#### Add Applications
+The **INSTALLED_APPS** in the **mysite/setting.py** holds all the activated Django applications in this Django instance. To include the app created in our project, its configuration class needs to be added in the **INSTALLED_APPS** setting. 
+
 Some of these applications make use of at least one database table, so you need to create the tables in the database before you can use them. To do this, run command: ```python manage.py migrate```.  
 The **migrate** command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your **mysite/settings.py** file and the **database migrations** shipped with the app (we’ll cover those later).
 #### Creating Models
