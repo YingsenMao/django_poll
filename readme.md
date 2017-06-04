@@ -47,16 +47,17 @@ Note the regular expressions for the **include()** functiond doesn't have a **$*
 ## Part 2
 #### Database Setup
 The **DATABASES** in the **mysite/setting.py** defines the database.  
-* ENGINE: database type.Eg. 'django.db.backends.postgresql'.
-* NAME: The name of your database. If you're using SQLite, it will be the full absolute path, including the filename.
+* **ENGINE**: database type.Eg. 'django.db.backends.postgresql'.
+* **NAME**: The name of your database. If you're using SQLite, it will be the full absolute path, including the filename.
 If you are not using SQLite as your database, the following additional settings must be added.
-* USER
-* PASSWORD
-* HOST 
-For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES]  
+* **USER**
+* **PASSWORD**
+* **HOST** 
+For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
 #### Installed Applications
 The **INSTALLED_APPS** in the **mysite/setting.py** holds the names of all the Django applications that are activated in this Django instance.  
-Some of these applications make use of at least one database table.
+Some of these applications make use of at least one database table, so you need to create the tables in the database before you can use them. To do this, run command: ```python manage.py migrate```.  
+The **migrate** command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your **mysite/settings.py** file and the **database migrations** shipped with the app (we’ll cover those later).
 #### Creating Models
 A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
 * Each model is a Python class that subclasses **django.db.models.Model**.
