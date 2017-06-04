@@ -48,6 +48,18 @@ If you are not using SQLite as your database, the following additional settings 
 * **USER**
 * **PASSWORD**
 * **HOST** 
+Below is an example connecting poll database in local postgresql server by using postgres users.
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'poll',
+        'USER': 'postgres',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+```
 For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
 #### Add Applications
 The **INSTALLED_APPS** in the **mysite/setting.py** holds all the activated Django applications in this Django instance. To include the app created in our project, its configuration class needs to be added in the **INSTALLED_APPS** setting.  
@@ -66,7 +78,6 @@ INSTALLED_APPS = [
 ```
 
 Some of these applications make use of at least one database table, so you need to create the tables in the database before you can use them. To do this, run command: ```python manage.py migrate```.  
-The **migrate** command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your **mysite/settings.py** file and the **database migrations** shipped with the app (we’ll cover those later).
 #### Create and Activate Models
 A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
 * Each model is a Python class that subclasses **django.db.models.Model**.
@@ -76,16 +87,29 @@ Below is an example creating two models.
 ```python
 #polls/models.py
 from django.db import models
+import datetime
+from django.utils import timezone
+
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
-
+    #return a clear description of object in database API
+    def __str__(self):
+        return self.question_text
+    def was_published_recently(sef):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+    #return a clear description of object in database API
+    def __str__(self):
+        return self.choice_text
 ```
 Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**. (described in **Add Application** section)  
-```python manage.py makemigrations polls``` to tell Django that you've made some changes to your models.  
-```python manage.py sqlmigrate polls 0001``` to returns SQLs.  
-```python manage.py migrate``` to take all migrations and synchronizing the changes you made to your models with the schema in the database.
+  
+Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
+Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
+Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
+The **migrate** command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your **mysite/settings.py** file and the **database migrations** shipped with the app.
