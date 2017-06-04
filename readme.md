@@ -43,12 +43,12 @@ Note the regular expressions for the **include()** functiond doesn't have a **$*
 #### Database Setup
 The **DATABASES** in the **mysite/setting.py** defines the database.  
 * **ENGINE**: database type.Eg. 'django.db.backends.postgresql'.
-* **NAME**: The name of your database. If you're using SQLite, it will be the full absolute path, including the filename.
+* **NAME**: The name of your database. It will be the full absolute path if you're using SQLite.  
 If you are not using SQLite as your database, the following additional settings must be added.
 * **USER**
 * **PASSWORD**
-* **HOST** 
-Below is an example connecting poll database in local postgresql server by using postgres users.
+* **HOST**   
+Below is an example connecting **poll database** in **local postgresql server** by using **postgres users**.
 ```python
 DATABASES = {
     'default': {
@@ -98,7 +98,7 @@ class Question(models.Model):
         return self.question_text
     def was_published_recently(sef):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-        
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
@@ -109,7 +109,6 @@ class Choice(models.Model):
 ```
 Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**. (described in **Add Application** section)  
   
-Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
-Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
-Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
-The **migrate** command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your **mysite/settings.py** file and the **database migrations** shipped with the app.
+* Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
+* Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
+* Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
