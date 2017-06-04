@@ -85,7 +85,7 @@ class Choice(models.Model):
     choice_text = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 ```
-Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**.  
-Run ```python manage.py makemigrations polls``` to tell Django that you've made some changes to your models.  
-Run ```python manage.py sqlmigrate polls 0001``` to returns SQLs.  
-Run ```python manage.py migrate``` to take all migrations and synchronizing the changes you made to your models with the schema in the database.
+Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**. (described in **Add Application** section)  
+```python manage.py makemigrations polls``` to tell Django that you've made some changes to your models.  
+```python manage.py sqlmigrate polls 0001``` to returns SQLs.  
+```python manage.py migrate``` to take all migrations and synchronizing the changes you made to your models with the schema in the database.
