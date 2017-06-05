@@ -112,4 +112,36 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
 * Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
+
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
+#### Create views to pull data from backend and render into template
+Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html. 
+```html
+<!--polls/templates/polls/index.html-->
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+```
+It’s very common to load a template, fill a context and return an HttpResponse object with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
+_Note: The context is a dictionary mapping template variable names to Python objects._
+```python
+from django.http import HttpResponse
+from .models import Question
+#from django.template import loader
+from django.shortcuts import render
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    """ 
+    template = loader.get_template('polls/index.html')
+    context = {'latest_question_list': latest_question_list}
+    return HttpResponse(template.render(context, request))
+    """
+    return render(request, 'polls/index.html', context)
+```
