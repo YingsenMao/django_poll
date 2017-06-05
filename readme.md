@@ -112,3 +112,4 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
 * Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
+After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
