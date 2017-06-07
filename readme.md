@@ -1,46 +1,14 @@
-## Set Up New Environment
+### Set up environment, create project, and create application
 cd to the target environment and type `virtualenv poll_project`.  
 It will create a folder in the current directory which will contain the Python executable files, and a copy of the pip library which you can use to install other packages.  
 Activate the virtual environment by using `poll_project\Scripts\activate`, and deactivate by using `deactivate`.  
-
-## Part 1
+Install **django** by `pip install django`
 Check the django version by `python -m django --version`.  
-#### Create a project 
+
 ```django-admin startproject mysite``` creates a project.  
 ```python manage.py startapp polls``` creates a application.  
-#### Create a view and call the view using url
-```python
-#polls/views.py
-from django.http import HttpResponse
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
-```
-To call the view, we need to map it to a URL. 
-```python
-#polls/urls.py
-from django.conf.urls import url
-from . import views
-
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-]
-```
-The next step is to reference the application urls in the project urls.
-```python
-#mysite/urls.py
-from django.conf.urls import include, url
-from django.contrib import admin
-
-urlpatterns = [
-    url(r'^polls/', include('polls.urls')),
-    url(r'^admin/', admin.site.urls),
-]
-```
-Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
-
-## Part 2
-#### Database Setup
+### Database Setup
 The **DATABASES** in the **mysite/setting.py** defines the database.  
 * **ENGINE**: database type.Eg. 'django.db.backends.postgresql'.
 * **NAME**: The name of your database. It will be the full absolute path if you're using SQLite.  
@@ -61,7 +29,7 @@ DATABASES = {
 }
 ```
 For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
-#### Add Applications
+### Add Applications
 The **INSTALLED_APPS** in the **mysite/setting.py** holds all the activated Django applications in this Django instance. To include the app created in our project, its configuration class needs to be added in the **INSTALLED_APPS** setting.  
 The **PollsConfig** class is in the **polls/apps.py** file, so its dotted path is **'polls.apps.PollsConfig'**. It'll look like this:
 ```python
@@ -77,8 +45,8 @@ INSTALLED_APPS = [
 ]
 ```
 
-Some of these applications make use of at least one database table, so you need to create the tables in the database before you can use them. To do this, run command: ```python manage.py migrate```.  
-#### Create and Activate Models
+Some of these applications make use of at least one database table, so you need to **create the tables in the database before you can use them**. To do this, run command: ```python manage.py migrate```. See more in Activate Models section.
+### Create and Activate Models
 A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
 * Each model is a Python class that subclasses **django.db.models.Model**.
 * Each attribute of the model represnets a database field.
@@ -114,27 +82,14 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
-#### Create views to pull data from backend and render into template
-Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html. 
-```html
-<!--polls/templates/polls/index.html-->
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
-```
-It’s very common to load a template, fill a context and return an HttpResponse object with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
-_Note: The context is a dictionary mapping template variable names to Python objects._
+### Create views
+A view is a callable which takes a request and returns a response. The view itself contains whatever arbitrary logic is necessary to return that response.
 ```python
+#polls/views.py
 from django.http import HttpResponse
 from .models import Question
 #from django.template import loader
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -144,4 +99,73 @@ def index(request):
     return HttpResponse(template.render(context, request))
     """
     return render(request, 'polls/index.html', context)
+
+def detail(request, question_id):
+    """
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    """
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
 ```
+It’s very common to **load a template**, **fill a context** and **return an HttpResponse object** with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
+_Note: The context is a dictionary mapping template variable names to Python objects._
+### Embedded a template into the view
+Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
+**ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html. 
+```html
+<!--polls/templates/polls/index.html-->
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <!--Removing hardcoded URLs in templates
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>  
+        -->
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+```
+```html
+<!--polls/templates/polls/detail.html-->
+<h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+```
+### Call a view through URLconf
+To call the view, we need to map it to a URL. 
+```python
+#polls/urls.py
+from django.conf.urls import url
+from . import views
+
+urlpatterns = [
+    # ex: /polls/
+    url(r'^$', views.index, name='index'),
+    # ex: /polls/5/
+    url(r'^(?P<question_id>[0-9]+)/$', views.detail, name='detail'),
+    # ex: /polls/5/results/
+    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
+    # ex: /polls/5/vote/
+    url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+]
+```
+The next step is to point the root URLconf at the polls.urls module.
+```python
+#mysite/urls.py
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^polls/', include('polls.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+```
+Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
