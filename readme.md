@@ -1,5 +1,5 @@
 ### Set up environment, create project, and create application
-`virtualenv poll_project`: Create environment call poll_project in current folder.
+`virtualenv poll_project`: Create environment call poll_project in current folder.  
 `poll_project\Scripts\activate`: Activate the virtual environment.  
 `deactivate`: Deactivate the virtual environment  
 `pip install django`: Install **django**.  
@@ -84,25 +84,31 @@ Before activating the models just created, the application that contains the mod
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
 ### Create URL directory to call VIEWs
 A view is simply a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. The view itself contains whatever arbitrary logic is necessary to return that response. But in order to call the view, we need to map it to a URL directory.  
-We'll create four views, thus four urls, that include:
-* **index** - display all the questions and enable user to click through into each question (call detail view)
-* **detail** - choices of a particular question with vote function (call vote view)
+**Four urls** in url directory will be created in order to call **four views** that will be created later. They are:
+* **index** - display all the questions and enable user to click through to show Choices of the question (call detail view)
+* **detail** - choices that the question have with vote function (call vote view)
 * **vote** - alter data server-side and redirect to result view
-* **results** - display the result of vote and enable user to go back to detail (call detail view)
+* **results** - display results of vote for each Choices for the question and enable user to go back to detail (call detail view)
 ```python
 #polls/urls.py
 from django.conf.urls import url
 from . import views
 
+app_name = 'polls'
+
 urlpatterns = [
-    # ex: /polls/
+    # ex: /polls/ 
+    # call index view
     url(r'^$', views.index, name='index'),
     # ex: /polls/5/
+    # call detail view
     url(r'^(?P<question_id>[0-9]+)/$', views.detail, name='detail'),
-    # ex: /polls/5/results/
-    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
     # ex: /polls/5/vote/
+    # call vote view
     url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+    # ex: /polls/5/results/
+    # call results view
+    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
 ]
 ```
 The next step is to point the root URLconf at the polls.urls module.
