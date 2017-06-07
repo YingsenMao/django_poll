@@ -1,9 +1,9 @@
 ### Set up environment, create project, and create application
-cd to the target environment and type `virtualenv poll_project`.  
-It will create a folder in the current directory which will contain the Python executable files, and a copy of the pip library which you can use to install other packages.  
-Activate the virtual environment by using `poll_project\Scripts\activate`, and deactivate by using `deactivate`.  
-Install **django** by `pip install django`
-Check the django version by `python -m django --version`.  
+`virtualenv poll_project`: Create environment call poll_project in current folder.
+`poll_project\Scripts\activate`: Activate the virtual environment.  
+`deactivate`: Deactivate the virtual environment  
+`pip install django`: Install **django**.  
+`python -m django --version`: Check django version.   
 
 ```django-admin startproject mysite``` creates a project.  
 ```python manage.py startapp polls``` creates a application.  
@@ -82,6 +82,41 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
+### Create URL directory to call VIEWs
+A view is simply a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. The view itself contains whatever arbitrary logic is necessary to return that response. But in order to call the view, we need to map it to a URL directory.  
+We'll create four views, thus four urls, that include:
+* **index** - display all the questions and enable user to click through into each question (call detail view)
+* **detail** - choices of a particular question with vote function (call vote view)
+* **vote** - alter data server-side and redirect to result view
+* **results** - display the result of vote and enable user to go back to detail (call detail view)
+```python
+#polls/urls.py
+from django.conf.urls import url
+from . import views
+
+urlpatterns = [
+    # ex: /polls/
+    url(r'^$', views.index, name='index'),
+    # ex: /polls/5/
+    url(r'^(?P<question_id>[0-9]+)/$', views.detail, name='detail'),
+    # ex: /polls/5/results/
+    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
+    # ex: /polls/5/vote/
+    url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
+]
+```
+The next step is to point the root URLconf at the polls.urls module.
+```python
+#mysite/urls.py
+from django.conf.urls import include, url
+from django.contrib import admin
+
+urlpatterns = [
+    url(r'^polls/', include('polls.urls')),
+    url(r'^admin/', admin.site.urls),
+]
+```
+Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
 ### Create views
 A view is a callable which takes a request and returns a response. The view itself contains whatever arbitrary logic is necessary to return that response.
 ```python
@@ -109,6 +144,28 @@ def detail(request, question_id):
     """
     question = get_object_or_404(Question, pk=question_id)
     return render(request, 'polls/detail.html', {'question': question})
+
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
 ```
 It’s very common to **load a template**, **fill a context** and **return an HttpResponse object** with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
 _Note: The context is a dictionary mapping template variable names to Python objects._
@@ -139,33 +196,15 @@ Your project’s **TEMPLATES** setting describes how Django will load and render
 {% endfor %}
 </ul>
 ```
-### Call a view through URLconf
-To call the view, we need to map it to a URL. 
-```python
-#polls/urls.py
-from django.conf.urls import url
-from . import views
+```html
+<!--polls/templates/polls/results.html-->
+<h1>{{ question.question_text }}</h1>
 
-urlpatterns = [
-    # ex: /polls/
-    url(r'^$', views.index, name='index'),
-    # ex: /polls/5/
-    url(r'^(?P<question_id>[0-9]+)/$', views.detail, name='detail'),
-    # ex: /polls/5/results/
-    url(r'^(?P<question_id>[0-9]+)/results/$', views.results, name='results'),
-    # ex: /polls/5/vote/
-    url(r'^(?P<question_id>[0-9]+)/vote/$', views.vote, name='vote'),
-]
-```
-The next step is to point the root URLconf at the polls.urls module.
-```python
-#mysite/urls.py
-from django.conf.urls import include, url
-from django.contrib import admin
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+{% endfor %}
+</ul>
 
-urlpatterns = [
-    url(r'^polls/', include('polls.urls')),
-    url(r'^admin/', admin.site.urls),
-]
+<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```
-Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
