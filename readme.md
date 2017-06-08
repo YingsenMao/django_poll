@@ -84,8 +84,8 @@ Before activating the models just created, the application that contains the mod
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
 ### Create URL directory to call VIEWs
 Below is what a View does how to call a View
-* It is a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
-* It is whatever arbitrary logic is necessary to return that response. 
+* It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
+* A view is a place where we put the **logic** of our application that is necessary to return that **Web response**. 
 * It request information from the model you created before and pass it to a template. 
 * But in order to call the view, we need to map it to a URL directory.  
   
