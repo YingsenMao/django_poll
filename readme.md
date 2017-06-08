@@ -1,4 +1,4 @@
-### Set up environment, create project, and create application
+﻿### Set up environment, create project, and create application
 `virtualenv poll_project`: Create environment call poll_project in current folder.  
 `poll_project\Scripts\activate`: Activate the virtual environment.  
 `deactivate`: Deactivate the virtual environment  
@@ -83,7 +83,11 @@ Before activating the models just created, the application that contains the mod
 
 After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
 ### Create URL directory to call VIEWs
-A view is simply a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. The view itself contains whatever arbitrary logic is necessary to return that response. But in order to call the view, we need to map it to a URL directory.  
+Below is what a View does how to call a View
+* It is a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
+* It is whatever arbitrary logic is necessary to return that response. 
+* It request information from the model you created before and pass it to a template. 
+* But in order to call the view, we need to map it to a URL directory.
 **Four urls** in url directory will be created in order to call **four views** that will be created later. They are:
 * **index** - display all the questions and enable user to click through to show Choices of the question (call detail view)
 * **detail** - choices that the question have with vote function (call vote view)
@@ -124,7 +128,6 @@ urlpatterns = [
 ```
 Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
 ### Create views
-A view is a callable which takes a request and returns a response. The view itself contains whatever arbitrary logic is necessary to return that response.
 ```python
 #polls/views.py
 from django.http import HttpResponse
