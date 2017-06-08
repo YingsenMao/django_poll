@@ -86,8 +86,8 @@ After migration, the database API can be accesed by ```python manage.py shell```
 Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
 * A view is a place where we put the **logic** of our application that is necessary to return that **Web response**. 
-* It request information from the model you created before and pass it to a template. 
-* But in order to call the view, we need to map it to a URL directory.  
+* It request information from the **model** you've created before and pass it to a **template** that will be created later. 
+* But in order to call the view, we need to map it to a **URL directory**.  
   
 **Four urls** in url directory will be created in order to call **four views** that will be created later. They are:
 * **index** - display all the questions and enable user to click through to show Choices of the question (call detail view)
