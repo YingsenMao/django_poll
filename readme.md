@@ -196,11 +196,17 @@ Your project’s **TEMPLATES** setting describes how Django will load and render
 ```html
 <!--polls/templates/polls/detail.html-->
 <h1>{{ question.question_text }}</h1>
-<ul>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
 {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}</li>
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
 {% endfor %}
-</ul>
+<input type="submit" value="Vote" />
+</form>
 ```
 ```html
 <!--polls/templates/polls/results.html-->
