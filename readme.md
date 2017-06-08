@@ -87,7 +87,8 @@ Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This response can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
 * It is whatever arbitrary logic is necessary to return that response. 
 * It request information from the model you created before and pass it to a template. 
-* But in order to call the view, we need to map it to a URL directory.
+* But in order to call the view, we need to map it to a URL directory.  
+  
 **Four urls** in url directory will be created in order to call **four views** that will be created later. They are:
 * **index** - display all the questions and enable user to click through to show Choices of the question (call detail view)
 * **detail** - choices that the question have with vote function (call vote view)
