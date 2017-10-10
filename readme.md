@@ -202,7 +202,7 @@ TEMPLATES = [
 * **DIRS** defines a list of directories where the engine should look for template source files, in search order.
 * **APP_DIRS** tells whether the engine should look for **templates folder** inside installed applications. Each backend defines a conventional name for the subdirectory inside applications where its templates should be stored.  
 **'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is stored to store project level html templates. Below is the file structure.  
-<img src="template_setting_1.PNG" width = '200px' height = '500px'>
+<img src="template_setting_1.PNG" width = '200px' height = '500px'>  
 The template files searching path will be:  
 * first looking for a template name matching in template folder in project level
 * then looking for the template folder in each of the install apps.  
