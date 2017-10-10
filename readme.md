@@ -16,13 +16,14 @@ If you are not using SQLite as your database, the following additional settings 
 * **USER**
 * **PASSWORD**
 * **HOST**   
-Below is an example connecting **poll database** in **local postgresql server** by using **postgres users**.
+Below is an example connecting **poll database** in **local postgresql server** by using **postgres users**. You have to install Postgresql on your local machine with password *3326999*, and creat a database called *poll*.
 ```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'poll',
         'USER': 'postgres',
+        'PASSWORD': '3326999',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -81,7 +82,8 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
-After migration, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
+After migration, tables are created automatically in the (Postgresql) database as shown below, and also, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
+<img src="database_1.JPG" width = '300px' height = '800px'>
 ### Create URL directory to call VIEWs
 Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
