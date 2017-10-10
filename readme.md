@@ -206,7 +206,7 @@ TEMPLATES = [
 The template files searching path will be:  
 * first looking for a template name matching in template folder in project level
 * then looking for the template folder in each of the install apps.  
-```
+```html
 <!--polls/templates/polls/index.html-->
 {% if latest_question_list %}
     <ul>
@@ -221,7 +221,7 @@ The template files searching path will be:
     <p>No polls are available.</p>
 {% endif %}
 ```
-```
+```html
 <!--polls/templates/polls/detail.html-->
 <h1>{{ question.question_text }}</h1>
 
@@ -236,7 +236,7 @@ The template files searching path will be:
 <input type="submit" value="Vote" />
 </form>
 ```
-```
+```html
 <!--polls/templates/polls/results.html-->
 <h1>{{ question.question_text }}</h1>
 
@@ -250,7 +250,7 @@ The template files searching path will be:
 ```  
 ### Static Files
 By default django looks for a “static” subdirectory in each of the INSTALLED_APP, just like it does for templates when 'APP_DIRS' in template setting is set to True. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
-```python 
+```python
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
