@@ -183,7 +183,27 @@ It’s very common to **load a template**, **fill a context** and **return an Ht
 _Note: The context is a dictionary mapping template variable names to Python objects._
 ### Embedded a template into the view
 Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
-**ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html. 
+**ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
+*10/10/2017 update*
+ The below code in settings.py defines configuration of template engine and location of tempaltes.
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'templates is added on 10/10/2017; see comment below;'
+        'DIRS': ['templates',],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # ... some options here ...
+        },
+    },
+]
+``` 
+* **DIRS** defines a list of directories where the engine should look for template source files, in search order.
+* **APP_DIRS** tells whether the engine should look for **templates folder** inside installed applications. Each backend defines a conventional name for the subdirectory inside applications where its templates should be stored.  
+**'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is to store project level templates. Below is the file structure.  
+<img src="template_setting_1.PNG" width = '300px' height = '600px'>
+
 ```html
 <!--polls/templates/polls/index.html-->
 {% if latest_question_list %}
