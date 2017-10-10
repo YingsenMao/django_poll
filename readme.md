@@ -184,8 +184,8 @@ _Note: The context is a dictionary mapping template variable names to Python obj
 ### Embedded a template into the view
 Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
 **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
-*10/10/2017 update*
- The below code in settings.py defines configuration of template engine and location of tempaltes.
+*--10/10/2017 update--*  
+The below code in settings.py file defines configuration of template engine and location of tempaltes.
 ```python
 TEMPLATES = [
     {
@@ -201,9 +201,11 @@ TEMPLATES = [
 ``` 
 * **DIRS** defines a list of directories where the engine should look for template source files, in search order.
 * **APP_DIRS** tells whether the engine should look for **templates folder** inside installed applications. Each backend defines a conventional name for the subdirectory inside applications where its templates should be stored.  
-**'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is to store project level templates. Below is the file structure.  
+**'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is stored to store project level html templates. Below is the file structure.  
 <img src="template_setting_1.PNG" width = '200px' height = '500px'>
-
+The template files searching path will be:
+* first looking for a template name matching in template folder in project level
+* then looking for the template folder in each of the install apps. 
 ```html
 <!--polls/templates/polls/index.html-->
 {% if latest_question_list %}
@@ -245,4 +247,13 @@ TEMPLATES = [
 </ul>
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+```  
+### Static Files
+By default django looks for a “static” subdirectory in each of the INSTALLED_APP, just like it does for templates when 'APP_DIRS' in template setting is set to True. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
+```python 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),
+)
 ```
+Then you can refer to the static file as below.
+<img src="template_setting_1.PNG" width = '500px' height = '500px'>
