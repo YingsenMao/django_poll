@@ -203,9 +203,9 @@ TEMPLATES = [
 * **APP_DIRS** tells whether the engine should look for **templates folder** inside installed applications. Each backend defines a conventional name for the subdirectory inside applications where its templates should be stored.  
 **'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is stored to store project level html templates. Below is the file structure.  
 <img src="template_setting_1.PNG" width = '200px' height = '500px'>
-The template files searching path will be:
+The template files searching path will be:  
 * first looking for a template name matching in template folder in project level
-* then looking for the template folder in each of the install apps. 
+* then looking for the template folder in each of the install apps.  
 ```html
 <!--polls/templates/polls/index.html-->
 {% if latest_question_list %}
@@ -255,5 +255,5 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
 ```
-Then you can refer to the static file as below.
-<img src="template_setting_1.PNG" width = '500px' height = '500px'>
+Then you can refer to the static file as below.  
+<img src="static_setting_1.PNG" width = '500px' height = '500px'>
