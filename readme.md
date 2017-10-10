@@ -206,7 +206,7 @@ TEMPLATES = [
 The template files searching path will be:  
 * first looking for a template name matching in template folder in project level
 * then looking for the template folder in each of the install apps.  
-```html
+```
 <!--polls/templates/polls/index.html-->
 {% if latest_question_list %}
     <ul>
@@ -221,7 +221,7 @@ The template files searching path will be:
     <p>No polls are available.</p>
 {% endif %}
 ```
-```html
+```
 <!--polls/templates/polls/detail.html-->
 <h1>{{ question.question_text }}</h1>
 
@@ -236,7 +236,7 @@ The template files searching path will be:
 <input type="submit" value="Vote" />
 </form>
 ```
-```html
+```
 <!--polls/templates/polls/results.html-->
 <h1>{{ question.question_text }}</h1>
 
@@ -256,4 +256,4 @@ STATICFILES_DIRS = (
 )
 ```
 Then you can refer to the static file as below.  
-<img src="static_setting_1.PNG" width = '500px' height = '500px'>
+<img src="static_setting_1.PNG" width = '500px' height = '400px'>
