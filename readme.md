@@ -83,7 +83,7 @@ Before activating the models just created, the application that contains the mod
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
 After migration, tables are created automatically in the (Postgresql) database as shown below, and also, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
-<img src="database_1.JPG" width = '300px' height = '800px'>
+<img src="database_1.PNG" width = '300px' height = '600px'>
 ### Create URL directory to call VIEWs
 Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
