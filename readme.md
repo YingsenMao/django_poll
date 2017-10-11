@@ -260,3 +260,5 @@ STATICFILES_DIRS = (
 ```
 Then you can refer to the static file as below.  
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>
+    
+### Deployment
