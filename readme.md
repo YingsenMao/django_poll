@@ -261,4 +261,21 @@ STATICFILES_DIRS = (
 Then you can refer to the static file as below.  
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>
     
-### Deployment
+### Deployment on Heroku
+**Dependency file** and **Profile** are required in root directory. The root directory has the same name of the project. Below shows a example for project called mysite.  
+<img src="deploy_1.PNG" width = '200px' height = '400px'>
+Note the environment has to be created in order to generate the dependency file. After you activate the environment, run pip install to install the package and pip freeze to update the requirement file. Below is an example.
+```python
+pip install whitenoise
+pip freeze > requirements.txt
+```
+Below is an example of requirement file
+```
+dj-database-url==0.4.2
+django==1.11.6
+gunicorn==19.7.1
+psycopg2==2.7.3.1
+pytz==2017.2
+whitenoise==3.3.1
+
+```
