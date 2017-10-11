@@ -262,6 +262,7 @@ Then you can refer to the static file as below.
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>
     
 ### Deployment on Heroku
+## Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
 <img src="deploy_1.PNG" width = '200px' height = '300px'>  
 Note the environment has to be created in order to generate the dependency file. After you activate the environment, run pip install to install the package and pip freeze to update the requirement file. Below is an example.
@@ -277,6 +278,40 @@ gunicorn==19.7.1
 psycopg2==2.7.3.1
 pytz==2017.2
 whitenoise==3.3.1
-
 ```
-After all, cd to the **root directory** and push to the heroku repo.
+## Database Setup
+The DATABASE_URL is assigned in Config Variables. In order to get the variable, import the **dj-database-url** library and re-set the database setting in settings.py file
+```python
+#settings.py
+# Update database configuration with $DATABASE_URL.
+import dj_database_url
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+```
+## Static files
+First set the STATIC_ROOT as below.
+```python
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+```
+Then install **whitenoise** library and make the below changes.
+```python
+#settings.py
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+```
+```python
+#wsgi.py
+from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
+
+application = get_wsgi_application()
+application = DjangoWhiteNoise(application)
+```
+## Deploy into Heroku
+After all, cd to the **root directory** (important! not outsite dir),initialize a git, and push to the heroku repo.
+## Migrate Apps and database on Heroku
+You need to make migrations before you can use the **admin** page and see data. Run the below code in repo.  
+```python
+heroku run python manage.py makemigrations
+heroku run python manage.py migrate
+heroku run python manage.py createsuperuser
+```
