@@ -251,7 +251,7 @@ The template files searching path will be:
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```  
-### Static Files
+### Static Files on development
 By default django looks for a “static” subdirectory in each of the INSTALLED_APP, just like it does for templates when 'APP_DIRS' in template setting is set to True. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
 ```python
 STATICFILES_DIRS = (
@@ -261,8 +261,8 @@ STATICFILES_DIRS = (
 Then you can refer to the static file as below.  
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>
     
-### Deployment on Heroku
-## Required files and libs
+## Deployment on Heroku
+### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
 <img src="deploy_1.PNG" width = '200px' height = '300px'>  
 Note the environment has to be created in order to generate the dependency file. After you activate the environment, run pip install to install the package and pip freeze to update the requirement file. Below is an example.
@@ -279,7 +279,7 @@ psycopg2==2.7.3.1
 pytz==2017.2
 whitenoise==3.3.1
 ```
-## Database Setup
+### Database Setup
 The DATABASE_URL is assigned in Config Variables. In order to get the variable, import the **dj-database-url** library and re-set the database setting in settings.py file
 ```python
 #settings.py
@@ -288,7 +288,7 @@ import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 ```
-## Static files
+### Static files
 First set the STATIC_ROOT as below.
 ```python
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -306,9 +306,9 @@ from whitenoise.django import DjangoWhiteNoise
 application = get_wsgi_application()
 application = DjangoWhiteNoise(application)
 ```
-## Deploy into Heroku
+### Deploy into Heroku
 After all, cd to the **root directory** (important! not outsite dir),initialize a git, and push to the heroku repo.
-## Migrate Apps and database on Heroku
+### Migrate Apps and database on Heroku
 You need to make migrations before you can use the **admin** page and see data. Run the below code in repo.  
 ```python
 heroku run python manage.py makemigrations
