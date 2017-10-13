@@ -1,13 +1,12 @@
 ﻿# Table of Contents
-1. [Example](#example)
-2. [Example2](#example2)
-3. [Third Example](#third-example)
+1. [Environment, Project, and Apps](#Set Up Environment, Create Project and Application)
+2. [Database](#Database Setup)
+3. [URL and Views](#URL and Views)  
+4. [Template](#Template)
+5. [Static Files](#Static Files)
+6. [Deployment](#Deployment)
 
-## Example
-## Example2
-## Third Example
-
-### Set up environment, create project, and create application
+## Set Up Environment, Create Project and Application
 `virtualenv poll_project`: Create environment call poll_project in current folder.  
 `poll_project\Scripts\activate`: Activate the virtual environment.  
 `deactivate`: Deactivate the virtual environment  
@@ -17,7 +16,9 @@
 ```django-admin startproject mysite``` creates a project.  
 ```python manage.py startapp polls``` creates a application.  
 
-### Database Setup
+`cd mysite` and `git init`  
+Note the environment file *poll_project* is **NOT** included in the the git repo. 
+## Database Setup
 The **DATABASES** in the **mysite/setting.py** defines the database.  
 * **ENGINE**: database type.Eg. 'django.db.backends.postgresql'.
 * **NAME**: The name of your database. It will be the full absolute path if you're using SQLite.  
@@ -39,24 +40,7 @@ DATABASES = {
 }
 ```
 For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
-### Add Applications
-The **INSTALLED_APPS** in the **mysite/setting.py** holds all the activated Django applications in this Django instance. To include the app created in our project, its configuration class needs to be added in the **INSTALLED_APPS** setting.  
-The **PollsConfig** class is in the **polls/apps.py** file, so its dotted path is **'polls.apps.PollsConfig'**. It'll look like this:
-```python
-#mysite/settings.py
-INSTALLED_APPS = [
-    'polls.apps.PollsConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-]
-```
-
-Some of these applications make use of at least one database table, so you need to **create the tables in the database before you can use them**. To do this, run command: ```python manage.py migrate```. See more in Activate Models section.
-### Create and Activate Models
+## Models
 A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
 * Each model is a Python class that subclasses **django.db.models.Model**.
 * Each attribute of the model represnets a database field.
@@ -85,15 +69,31 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 ```
-Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**. (described in **Add Application** section)  
-  
+Before activating the models just created, the application that contains the models (polls in this case) has to be added into **INSTALLED_APPS**.  
+
+The *INSTALLED_APPS* holds all the activated Django applications in this Django instance. To include the app created in our project, its configuration class needs to be added in the **INSTALLED_APPS** setting.  
+The **PollsConfig** class is in the **polls/apps.py** file, so its dotted path is **'polls.apps.PollsConfig'**. It'll look like this:
+```python
+#mysite/settings.py
+INSTALLED_APPS = [
+    'polls.apps.PollsConfig',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+Some of these applications make use of at least one database table, so you need to **create the tables in the database before you can use them**. To do this, run command: ```python manage.py migrate```. See more in Activate Models section.
 * Command ```python manage.py makemigrations polls``` tells Django that you've made some changes to your models.  
 * Command ```python manage.py sqlmigrate polls 0001``` returns SQLs.  
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
 After migration, tables are created automatically in the (Postgresql) database as shown below, and also, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
 <img src="database_1.PNG" width = '300px' height = '600px'>
-### Create URL directory to call VIEWs
+## URL and Views
+### URLs
 Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
 * A view is a place where we put the **logic** of our application that is necessary to return that **Web response**. 
@@ -139,7 +139,7 @@ urlpatterns = [
 ]
 ```
 Note the regular expressions for the **include()** functiond doesn't have a **$**(end-of-string match character) but rather a trailing slash. Whenever Django encounters **include()**, it chops off whatever part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing.
-### Create views
+### Views
 ```python
 #polls/views.py
 from django.http import HttpResponse
@@ -190,7 +190,7 @@ def results(request, question_id):
 ```
 It’s very common to **load a template**, **fill a context** and **return an HttpResponse object** with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
 _Note: The context is a dictionary mapping template variable names to Python objects._
-### Embedded a template into the view
+## Template
 Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
 **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
 *--10/10/2017 update--*  
@@ -260,8 +260,8 @@ The template files searching path will be:
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```  
-### Static Files
-#### Find the Static Files
+## Static Files
+### Find the Static Files
 The *STATICFILES_FINDERS* defines where to find static files. 
 * *AppDirectoriesFinder* is responsible for picking up *$app_name/static/* (make sure the app it refers to is added under the *INSTALLED_APP*), it is similiar to what it does for templates when 'APP_DIRS' in template setting is set to True. 
 * The *FileSystemFinder* uses the directories specified in the *STATICFILES_DIRS* tuple. 
@@ -283,15 +283,15 @@ Then you can refer to the static file as below.
 If you run `print(STATICFILES_DIRS)` it shows `('C:\\Users\\Daniemao\\Documents\\django_tutorial\\django_poll\\mysite\\assets',)`.  
   
 **Note**: You should **never** require *STATIC_ROOT* in development if you are using Django's runserver. Once you go to production, you run `python manage.py collectstatic` will collect all the static resources, i.e the resources found in STATICFILES_DIRS and the resources found in static/ subdirectory of apps, into a single location defined by STATIC_ROOT.
-#### Store the Static Files
+### Store the Static Files
 The *STATICFILES_STORAGE* setting controls how the files are aggregated together.  
 The default value is `django.contrib.staticfiles.storage.StaticFilesStorage` which will copy the collected files to the directory specified by STATIC_ROOT.  
 **Note:** Update: To be absolutely clear, STATIC_ROOT should live outside of your Django project – it’s the directory to where your static files are collected, for use by a local webserver or similar; Django’s involvement with that directory should end once your static files have been collected there.
-#### URL
+### URL
 *STATIC_URL* should be the URL at which a user/client/browser can reach the static files that have been aggregated by `collectstatic`.  
 If you’re using the default *StaticFilesStorage*, then this will be the location of where your nginx (or similar) instance is serving up STATIC_ROOT, e.g. the default /static/, or, better, something like http://static.example.com/. If you’re using Amazon S3 this will be http://your_s3_bucket.s3.amazonaws.com/. Essentially, this is wholly dependent on whatever technique you’re using to host your static files. It’s a URL, and not a file path
 
-## Deployment on Heroku
+## Deployment
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
 <img src="deploy_1.PNG" width = '200px' height = '300px'>  
