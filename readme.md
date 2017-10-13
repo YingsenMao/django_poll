@@ -251,8 +251,15 @@ The template files searching path will be:
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```  
-### Static Files on development
-By default django looks for a “static” subdirectory in each of the INSTALLED_APP, just like it does for templates when 'APP_DIRS' in template setting is set to True. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
+### Static Files
+The *STATICFILES_FINDERS* defines where to find static files. The *AppDirectoriesFinder* is responsible for picking up *$app_name/static/* (make sure the app it refers to is added under the *INSTALLED_APP*), it is similiar to what it does for templates when 'APP_DIRS' in template setting is set to True. The *FileSystemFinder* uses the directories specified in the *STATICFILES_DIRS* tuple. 
+```python
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+```
+Below is an example. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
 ```python
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
@@ -260,7 +267,7 @@ STATICFILES_DIRS = (
 ```
 Then you can refer to the static file as below.  
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>
-    
+If you run `print(STATICFILES_DIRS)` it shows `('C:\\Users\\Daniemao\\Documents\\django_tutorial\\django_poll\\mysite\\assets',)`.
 ## Deployment on Heroku
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
