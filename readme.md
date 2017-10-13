@@ -252,6 +252,7 @@ The template files searching path will be:
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```  
 ### Static Files
+#### Find the Static Files
 The *STATICFILES_FINDERS* defines where to find static files. The *AppDirectoriesFinder* is responsible for picking up *$app_name/static/* (make sure the app it refers to is added under the *INSTALLED_APP*), it is similiar to what it does for templates when 'APP_DIRS' in template setting is set to True. The *FileSystemFinder* uses the directories specified in the *STATICFILES_DIRS* tuple. 
 ```python
 STATICFILES_FINDERS = [
@@ -266,8 +267,15 @@ STATICFILES_DIRS = (
 )
 ```
 Then you can refer to the static file as below.  
-<img src="static_setting_1.PNG" width = '500px' height = '400px'>
+<img src="static_setting_1.PNG" width = '500px' height = '400px'>  
+
 If you run `print(STATICFILES_DIRS)` it shows `('C:\\Users\\Daniemao\\Documents\\django_tutorial\\django_poll\\mysite\\assets',)`.
+#### Store the Static Files
+The *STATICFILES_STORAGE* setting controls how the files are aggregated together. The default value is `django.contrib.staticfiles.storage.StaticFilesStorage` which will copy the collected files to the directory specified by STATIC_ROOT.  Do not confuse *STATIC_ROOT*, to where static files are collected, with the aforementioned *STATICFILES_DIRS*; the former is output, the latter are inputs. They should not overlap. This is a common mistake.  
+**Note:** Update: To be absolutely clear, STATIC_ROOT should live outside of your Django project – it’s the directory to where your static files are collected, for use by a local webserver or similar; Django’s involvement with that directory should end once your static files have been collected there.
+#### URL
+*STATIC_URL* should be the URL at which a user/client/browser can reach the static files that have been aggregated by `collectstatic`.  f you’re using the default *StaticFilesStorage*, then this will be the location of where your nginx (or similar) instance is serving up STATIC_ROOT, e.g. the default /static/, or, better, something like http://static.example.com/. If you’re using Amazon S3 this will be http://your_s3_bucket.s3.amazonaws.com/. Essentially, this is wholly dependent on whatever technique you’re using to host your static files. It’s a URL, and not a file path
+
 ## Deployment on Heroku
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
