@@ -346,3 +346,13 @@ heroku run python manage.py makemigrations
 heroku run python manage.py migrate
 heroku run python manage.py createsuperuser
 ```
+
+
+
+https://wagtail.io/blog/amazon-s3-for-media-files/
+https://blog.doismellburning.co.uk/using-amazon-s3-to-host-your-django-static-files/
+https://stackoverflow.com/questions/26061101/images-not-uploading-in-heroku-app-using-django-zinnia-blog
+https://stackoverflow.com/questions/20480984/serve-static-files-on-heroku-using-aws-s3-for-django
+http://agiliq.com/blog/2014/06/heroku-django-s3-for-serving-media-files/
+https://www.caktusgroup.com/blog/2014/11/10/Using-Amazon-S3-to-store-your-Django-sites-static-and-media-files/
+https://www.caktusgroup.com/blog/2017/08/28/advanced-django-file-handling/
