@@ -1,10 +1,11 @@
 ﻿# Table of Contents
 1. [Environment, Project, and Apps](#Environment)
 2. [Database](#Database)
-3. [URL and Views](#URLViews)  
-4. [Template](#Template)
-5. [Static Files](#StaticFiles)
-6. [Deployment](#Deployment)
+3. [Model](#Model)
+4. [URL and Views](#URLViews)  
+5. [Template](#Template)
+6. [Static Files](#StaticFiles)
+7. [Deployment](#Deployment)
 
 ## Set Up Environment, Create Project and Application <a name="Environment"></a>
 `virtualenv poll_project`: Create environment call poll_project in current folder.  
@@ -18,7 +19,7 @@
 
 `cd mysite` and `git init`  
 Note the environment file *poll_project* is **NOT** included in the the git repo. 
-## Database Setup
+## Database Setup <a name="Database"></a>
 The **DATABASES** in the **mysite/setting.py** defines the database.  
 * **ENGINE**: database type.Eg. 'django.db.backends.postgresql'.
 * **NAME**: The name of your database. It will be the full absolute path if you're using SQLite.  
@@ -40,7 +41,7 @@ DATABASES = {
 }
 ```
 For more detials, see [DATABASES](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-DATABASES)
-## Models
+## Models <a name="Model"></a>
 A model is the single, definitive source of information about your data. It contains the essential fields and behaviors of the data you're storing. 
 * Each model is a Python class that subclasses **django.db.models.Model**.
 * Each attribute of the model represnets a database field.
@@ -92,7 +93,7 @@ Some of these applications make use of at least one database table, so you need 
 
 After migration, tables are created automatically in the (Postgresql) database as shown below, and also, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
 <img src="database_1.PNG" width = '300px' height = '600px'>
-## URL and Views
+## URL and Views <a name="URLViews"></a>
 ### URLs
 Below is what a View does how to call a View
 * It is a Python function that takes a **Web request** and returns a **Web response**. This **Web response** can be the HTML contents of a Web page, a redirect, a 404 error, etc. 
@@ -190,7 +191,7 @@ def results(request, question_id):
 ```
 It’s very common to **load a template**, **fill a context** and **return an HttpResponse object** with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
 _Note: The context is a dictionary mapping template variable names to Python objects._
-## Template
+## Template <a name="Template"></a>
 Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
 **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
 *--10/10/2017 update--*  
@@ -260,7 +261,7 @@ The template files searching path will be:
 
 <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 ```  
-## Static Files
+## Static Files <a name="StaticFiles"></a>
 ### Find the Static Files
 The *STATICFILES_FINDERS* defines where to find static files. 
 * *AppDirectoriesFinder* is responsible for picking up *$app_name/static/* (make sure the app it refers to is added under the *INSTALLED_APP*), it is similiar to what it does for templates when 'APP_DIRS' in template setting is set to True. 
@@ -291,7 +292,7 @@ The default value is `django.contrib.staticfiles.storage.StaticFilesStorage` whi
 *STATIC_URL* should be the URL at which a user/client/browser can reach the static files that have been aggregated by `collectstatic`.  
 If you’re using the default *StaticFilesStorage*, then this will be the location of where your nginx (or similar) instance is serving up STATIC_ROOT, e.g. the default /static/, or, better, something like http://static.example.com/. If you’re using Amazon S3 this will be http://your_s3_bucket.s3.amazonaws.com/. Essentially, this is wholly dependent on whatever technique you’re using to host your static files. It’s a URL, and not a file path
 
-## Deployment
+## Deployment <a name="Deployment"></a>
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
 <img src="deploy_1.PNG" width = '200px' height = '300px'>  
