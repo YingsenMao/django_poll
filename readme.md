@@ -1,12 +1,12 @@
 ﻿# Table of Contents
-1. [Environment, Project, and Apps](#Set Up Environment, Create Project and Application)
-2. [Database](#Database Setup)
-3. [URL and Views](#URL and Views)  
+1. [Environment, Project, and Apps](#Environment)
+2. [Database](#Database)
+3. [URL and Views](#URLViews)  
 4. [Template](#Template)
-5. [Static Files](#Static Files)
+5. [Static Files](#StaticFiles)
 6. [Deployment](#Deployment)
 
-## Set Up Environment, Create Project and Application
+## Set Up Environment, Create Project and Application <a name="Environment"></a>
 `virtualenv poll_project`: Create environment call poll_project in current folder.  
 `poll_project\Scripts\activate`: Activate the virtual environment.  
 `deactivate`: Deactivate the virtual environment  
