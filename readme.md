@@ -324,18 +324,18 @@ The default value is `django.contrib.staticfiles.storage.StaticFilesStorage` whi
 If you’re using the default *StaticFilesStorage*, then this will be the location of where your nginx (or similar) instance is serving up STATIC_ROOT, e.g. the default /static/, or, better, something like http://static.example.com/. If you’re using Amazon S3 this will be http://your_s3_bucket.s3.amazonaws.com/. Essentially, this is wholly dependent on whatever technique you’re using to host your static files. It’s a URL, and not a file path
 ## Form <a name="Form"></a>
 Create a forms.py file in the application folder, and fill out the form file. 
-<img src="form_1.PNG" width = '500px' height = '500px'>  
+<img src="form_1.png" width = '500px' height = '500px'>  
 To use the form file we just created, first, import it in view.py, note here we use the `class-based view`.
-<img src="form_2.PNG" width = '500px' height = '350px'>  
+<img src="form_2.png" width = '500px' height = '350px'>  
 Then in the template file. Here we use `widget_tweaks` to format the form layout. 
-<img src="form_3.PNG" width = '300px' height = '500px'>  
-<img src="form_4.PNG" width = '50px' height = '300px'>  
+<img src="form_3.png" width = '300px' height = '500px'>  
+<img src="form_4.png" width = '50px' height = '300px'>  
 **Trouble shooting** When fill out the data and click insert, the data wasn't added to the database and it doesn’t return any error messages. To print out the error message, add the following codes. 
-<img src="form_5.PNG" width = '300px' height = '400px'>  
-<img src="form_6.PNG" width = '150px' height = '50px'>  
-<img src="form_7.PNG" width = '100px' height = '100px'>  
+<img src="form_5.png" width = '300px' height = '400px'>  
+<img src="form_6.png" width = '150px' height = '50px'>  
+<img src="form_7.png" width = '100px' height = '100px'>  
 The reason is because the bednum in the form is required, and I didn’t add the bednum field in html template by mistake. 
-<img src="form_8.PNG" width = '500px' height = '400px'>  
+<img src="form_8.png" width = '500px' height = '400px'>  
 ## Deployment <a name="Deployment"></a>
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
