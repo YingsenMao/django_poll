@@ -92,7 +92,36 @@ Some of these applications make use of at least one database table, so you need 
 * Command ```python manage.py migrate``` takes all migrations and synchronizing the changes you made to your models with the schema in the database.  
 
 After migration, tables are created automatically in the (Postgresql) database as shown below, and also, the database API can be accesed by ```python manage.py shell``` and ```from polls.models import Question, Choice```.  
-<img src="database_1.PNG" width = '300px' height = '600px'>
+<img src="database_1.PNG" width = '300px' height = '600px'>  
+If you created the table in the database before configuring models in django, for example, you created a table called `maintb` in Postgresql using the below code:
+```
+CREATE TABLE maintb
+(
+    id BIGSERIAL,
+patientId integer,
+name varchar(5),
+    age integer,
+    heartrate integer,
+    sysbp integer,
+    diasbp integer,
+    resprate integer,
+    tempc numeric(10, 4),
+    spo2 numeric(10, 4),
+	bednum integer,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    CONSTRAINT Training_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+```
+Then, run the code hightlighted below to generate the model defination for the table.
+<img src="model_inspectdb.PNG" width = '900px' height = '350px'>  
+Copy the defination into the model.  
+<img src="model_inspectdb2.PNG" width = '1000px' height = '400px'>  
+Migrate the model with --fake-initial as below.  
+<img src="model_inspectdb3.PNG" width = '800px' height = '200px'> 
 ## URL and Views <a name="URLViews"></a>
 ### URLs
 Below is what a View does how to call a View
