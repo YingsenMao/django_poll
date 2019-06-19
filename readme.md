@@ -5,7 +5,8 @@
 4. [URL and Views](#URLViews)  
 5. [Template](#Template)
 6. [Static Files](#StaticFiles)
-7. [Deployment](#Deployment)
+7. [Form](#Form)
+8. [Deployment](#Deployment)
 
 ## Set Up Environment, Create Project and Application <a name="Environment"></a>
 `virtualenv poll_project`: Create environment call poll_project in current folder.  
@@ -117,11 +118,11 @@ WITH (
 TABLESPACE pg_default;
 ```
 Then, run the code hightlighted below to generate the model defination for the table.
-<img src="model_inspectdb.PNG" width = '900px' height = '350px'>  
+<img src="model_inspectdb.PNG" width = '500px' height = '200px'>  
 Copy the defination into the model.  
-<img src="model_inspectdb2.PNG" width = '1000px' height = '400px'>  
+<img src="model_inspectdb2.PNG" width = '500px' height = '200px'>  
 Migrate the model with --fake-initial as below.  
-<img src="model_inspectdb3.PNG" width = '800px' height = '200px'> 
+<img src="model_inspectdb3.PNG" width = '500px' height = '200px'> 
 ## URL and Views <a name="URLViews"></a>
 ### URLs
 Below is what a View does how to call a View
@@ -221,10 +222,8 @@ def results(request, question_id):
 It’s very common to **load a template**, **fill a context** and **return an HttpResponse object** with the result of the rendered template. Django provides a shortcut **render()**. It takes the request object as the first argument, a template name as its second argument, and a **dictionary** as its optional third argument. It returns an **HttpResponse** object of the given template rendered with the given context.  
 _Note: The context is a dictionary mapping template variable names to Python objects._
 ## Template <a name="Template"></a>
-Your project’s **TEMPLATES** setting describes how Django will load and render templates. By convention DjangoTemplates looks for a “templates” subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as 
-**ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
-*--10/10/2017 update--*  
-The below code in settings.py file defines configuration of template engine and location of tempaltes.
+1. Application-level template configuration  
+The parameter of `APP_DIRS` being set to `TRUE` indicates Django looks for a **“templates”** subdirectory in each of the INSTALLED_APPS. Since Django will choose the first template it finds whose name matches, so it's better to range the file as: **ApplicationFolder/templates/Application/templateName.html**. For example, polls/templates/polls/index.html.  
 ```python
 TEMPLATES = [
     {
@@ -238,15 +237,11 @@ TEMPLATES = [
     },
 ]
 ``` 
-* **DIRS** defines a list of directories where the engine should look for template source files, in search order.
-* **APP_DIRS** tells whether the engine should look for **templates folder** inside installed applications. Each backend defines a conventional name for the subdirectory inside applications where its templates should be stored.
-    
-**'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is stored to store project level html templates. Below is the file structure.  
+2. Project-level template configuration  
+**DIRS** defines a list of prject-level template directories where the engine should look for in search order. It is usually the templates that the app-level templates extent from. In the example above, the project-level template called  **'templates'** is added into **DIRS**, meanwhile, a **templates folder** has to be created in the main folder where manage.py is stored to store project level html templates. Below is the file structure.  
 <img src="template_setting_1.PNG" width = '200px' height = '500px'> 
    
-The template files searching path will be:
-* first looking for a template name matching in template folder in project level
-* then looking for the template folder in each of the install apps.
+`Note: django will look for project-level template if exists **before** the application-level template`
   
 ```html
 <!--polls/templates/polls/index.html-->
@@ -292,16 +287,23 @@ The template files searching path will be:
 ```  
 ## Static Files <a name="StaticFiles"></a>
 ### Find the Static Files
-The *STATICFILES_FINDERS* defines where to find static files. 
-* *AppDirectoriesFinder* is responsible for picking up *$app_name/static/* (make sure the app it refers to is added under the *INSTALLED_APP*), it is similiar to what it does for templates when 'APP_DIRS' in template setting is set to True. 
-* The *FileSystemFinder* uses the directories specified in the *STATICFILES_DIRS* tuple. 
+1. Application-level static files
+(1) Make sure that **django.contrib.staticfiles** is included in your **INSTALLED_APPS**.  
+(2) In your settings file, define STATIC_URL, for example:
 ```python
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
+STATIC_URL = '/static/'
 ```
-Below is an example. In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
+(3) In your templates, use the static template tag to build the URL for the given relative path using the configured STATICFILES_STORAGE.  
+```python
+{% load static %}
+<img src="{% static "my_app/example.jpg" %}" alt="My image">
+```
+(4) Store your static files in a folder called static in your app. For example my_app/static/my_app/example.jpg.  
+Here is another example, the `prediction` is an application:
+<img src="template1.PNG" width = '500px' height = '110px'> 
+
+2. Project-level static files
+In order to create project-level static files used for the project-level templates we just created, add the below code and, meanwhile, create a folder called asset in the main folder where manage.py is stored to store project level static files.
 ```python
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
@@ -311,7 +313,7 @@ Then you can refer to the static file as below.
 <img src="static_setting_1.PNG" width = '500px' height = '400px'>  
 
 If you run `print(STATICFILES_DIRS)` it shows `('C:\\Users\\Daniemao\\Documents\\django_tutorial\\django_poll\\mysite\\assets',)`.  
-  
+
 **Note**: You should **never** require *STATIC_ROOT* in development if you are using Django's runserver. Once you go to production, you run `python manage.py collectstatic` will collect all the static resources, i.e the resources found in STATICFILES_DIRS and the resources found in static/ subdirectory of apps, into a single location defined by STATIC_ROOT.
 ### Store the Static Files
 The *STATICFILES_STORAGE* setting controls how the files are aggregated together.  
@@ -320,7 +322,20 @@ The default value is `django.contrib.staticfiles.storage.StaticFilesStorage` whi
 ### URL
 *STATIC_URL* should be the URL at which a user/client/browser can reach the static files that have been aggregated by `collectstatic`.  
 If you’re using the default *StaticFilesStorage*, then this will be the location of where your nginx (or similar) instance is serving up STATIC_ROOT, e.g. the default /static/, or, better, something like http://static.example.com/. If you’re using Amazon S3 this will be http://your_s3_bucket.s3.amazonaws.com/. Essentially, this is wholly dependent on whatever technique you’re using to host your static files. It’s a URL, and not a file path
-
+## Form <a name="Form"></a>
+Create a forms.py file in the application folder, and fill out the form file. 
+<img src="form_1.PNG" width = '500px' height = '500px'>  
+To use the form file we just created, first, import it in view.py, note here we use the `class-based view`.
+<img src="form_2.PNG" width = '500px' height = '350px'>  
+Then in the template file. Here we use `widget_tweaks` to format the form layout. 
+<img src="form_3.PNG" width = '300px' height = '500px'>  
+<img src="form_4.PNG" width = '50px' height = '300px'>  
+**Trouble shooting** When fill out the data and click insert, the data wasn't added to the database and it doesn’t return any error messages. To print out the error message, add the following codes. 
+<img src="form_5.PNG" width = '300px' height = '400px'>  
+<img src="form_6.PNG" width = '150px' height = '50px'>  
+<img src="form_7.PNG" width = '100px' height = '100px'>  
+The reason is because the bednum in the form is required, and I didn’t add the bednum field in html template by mistake. 
+<img src="form_8.PNG" width = '500px' height = '400px'>  
 ## Deployment <a name="Deployment"></a>
 ### Required files and libs
 **Dependency file** and **Profile** are required in root directory. **The root directory has the same name of the project**. Below shows a example for project called mysite.  
